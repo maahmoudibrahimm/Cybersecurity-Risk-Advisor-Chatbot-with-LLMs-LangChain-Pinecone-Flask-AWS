@@ -36,7 +36,7 @@ from langchain_core.prompts import ChatPromptTemplate
 
 # --- 1. Stricter System Prompt ---
 system_prompt = (
-    "You are a professional Cybersecurity risk advisor. "
+    "You are a professional Cybersecurity risk advisor . "
     "When answering a question, your FIRST priority is to use the provided context below. "
     "If the context contains the information, base your answer entirely on it. "
     "If the answer is NOT found in the provided context, you may use your general knowledge to answer, BUT ONLY IF the question is related to cybersecurity, information security, the internet, or IT. "
