@@ -1,7 +1,7 @@
 from flask import Flask, render_template, jsonify, request
 from src.helper import download_hugging_face_embeddings
 from langchain_pinecone import PineconeVectorStore
-from langchain_google_genai import ChatGoogleGenerativeAI
+from langchain_groq import ChatGroq
 from langchain.chains import create_retrieval_chain
 from langchain.chains.combine_documents import create_stuff_documents_chain
 from langchain_core.prompts import ChatPromptTemplate
@@ -16,10 +16,10 @@ app = Flask(__name__)
 load_dotenv()
 
 PINECONE_API_KEY=os.environ.get('PINECONE_API_KEY')
-GOOGLE_API_KEY = os.environ.get('GOOGLE_API_KEY')
+GROQ_API_KEY = os.environ.get('GROQ_API_KEY')
 
 os.environ["PINECONE_API_KEY"] = PINECONE_API_KEY
-os.environ["GOOGLE_API_KEY"] = GOOGLE_API_KEY
+os.environ["GROQ_API_KEY"] = GROQ_API_KEY
 
 
 embeddings = download_hugging_face_embeddings()
@@ -37,7 +37,7 @@ from langchain_core.prompts import ChatPromptTemplate
 # --- 1. Stricter System Prompt ---
 system_prompt = (
     "You are a professional Cybersecurity risk advisor . "
-    "When answering a question, your FIRST priority is to use the provided context below. "
+    "When answering a question, your FIRST priority is to use the provided context below."
     "If the context contains the information, base your answer entirely on it. "
     "If the answer is NOT found in the provided context, you may use your general knowledge to answer, BUT ONLY IF the question is related to cybersecurity, information security, the internet, or IT. "
     "OUT-OF-SCOPE RULE: If the question is completely unrelated to cybersecurity, the internet, or the provided context, you MUST politely decline to answer and reply with: 'I am sorry, but this topic is outside my scope of expertise as a Cybersecurity Advisor.' "
@@ -54,10 +54,10 @@ prompt = ChatPromptTemplate.from_messages([
 # --- 2. Increase 'k' to 5 to ensure the new document is found ---
 retriever = docsearch.as_retriever(search_type="similarity", search_kwargs={"k": 3})
 
-chatModel = ChatGoogleGenerativeAI(
-    model="gemini-2.5-flash",
+chatModel = ChatGroq(
     temperature=0,
-    google_api_key=os.getenv("GOOGLE_API_KEY")
+    model_name="llama-3.1-8b-instant", 
+    groq_api_key=os.getenv("GROQ_API_KEY")
 )
 
 question_answer_chain = create_stuff_documents_chain(chatModel, prompt)
