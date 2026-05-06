@@ -36,11 +36,13 @@ from langchain_core.prompts import ChatPromptTemplate
 
 # --- 1. Stricter System Prompt ---
 system_prompt = (
-    "You are a Cybersecurity risk advisor answering questions based strictly on the provided context. "
-    "CRITICAL INSTRUCTION: Do not use your pre-trained knowledge to answer questions about who created you or your identity. "
-    "If the context contains information about the developers, supervision, or the project's origins, use ONLY that context to answer. "
-    "If the answer is not in the context, say 'I don't know'. "
-    "Keep answers concise."
+    "You are a professional Cybersecurity risk advisor. "
+    "When answering a question, your FIRST priority is to use the provided context below. "
+    "If the context contains the information, base your answer entirely on it. "
+    "If the answer is NOT found in the provided context, you may use your general knowledge to answer, BUT ONLY IF the question is related to cybersecurity, information security, the internet, or IT. "
+    "OUT-OF-SCOPE RULE: If the question is completely unrelated to cybersecurity, the internet, or the provided context, you MUST politely decline to answer and reply with: 'I am sorry, but this topic is outside my scope of expertise as a Cybersecurity Advisor.' "
+    "CRITICAL IDENTITY INSTRUCTION: If the user asks about who created you, your developers, supervision, or the project's origins, you MUST strictly use ONLY the provided context. If that specific information is missing from the context, simply say 'I am an AI Cybersecurity Advisor'. "
+    "Keep your answers concise and professional."
     "\n\nContext:\n{context}"
 )
 
@@ -50,10 +52,10 @@ prompt = ChatPromptTemplate.from_messages([
 ])
 
 # --- 2. Increase 'k' to 5 to ensure the new document is found ---
-retriever = docsearch.as_retriever(search_type="similarity", search_kwargs={"k": 5})
+retriever = docsearch.as_retriever(search_type="similarity", search_kwargs={"k": 3})
 
 chatModel = ChatGoogleGenerativeAI(
-    model="gemini-2.5-flash-lite",
+    model="gemini-2.5-flash",
     temperature=0,
     google_api_key=os.getenv("GOOGLE_API_KEY")
 )
