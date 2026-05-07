@@ -345,11 +345,3 @@ Appendix A — Quick file reference
 - [README.md](README.md): Quick-start and deployment notes.
 
 ---
-
-If you want, I can:
-
-- Convert `docs/documentation.md` to a 20-page PDF (requires a renderer); or
-- Expand any section with deeper, line-by-line code commentary and include short annotated code excerpts; or
-- Add a short automated test suite for the helper functions.
-
-Tell me which of these you prefer next.
